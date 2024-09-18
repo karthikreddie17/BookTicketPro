@@ -1,8 +1,4 @@
-# Library Management System V2
-
-## Description
-The Library Management System is a robust platform designed to streamline the operations of modern libraries. It supports comprehensive user and book management, facilitates book requests, allocations, and feedback, and provides detailed analytics and reporting features to enhance library services and user experience.
-
+# Project1 
 
 ## Technologies Stack
 - Flask for building the backend API.
