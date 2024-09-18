@@ -1,0 +1,19 @@
+GET /api/users - Retrieve all users.
+POST /api/users - Create a new user.
+GET /api/books - List all books.
+POST /api/books - Add new book.
+POST /api/books/{bookId}/request - Request a specific book.
+GET /api/requests - Fetch all book requests.
+POST /api/grant_book - Approve a book request.
+POST /api/reject_book - Deny a book request.
+GET /api/allocated_books - List allocated books.
+POST /api/deallocate_book - Deallocate a book.
+POST /api/initialize_book_status - Set initial book status.
+GET /api/allocated_books_user - Show user’s allocated books.
+POST /api/rate_and_feedback_book - Submit book feedback and rating.
+POST /api/return_book - Return a borrowed book.
+GET /api/books_per_section/{sectionId} - Books in a specific section.
+GET /api/book_ratings - Retrieve book ratings.
+GET /api/most_requested_books - Top requested books.
+POST /trigger-csv-export - Initiate CSV export.
+GET /status/{id} - Check Celery task status.

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Signup Page</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 60%;
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .form-section {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .image-section {
+            flex: 1;
+            background: url('static/library11.gif') no-repeat center center;
+            background-size: contain;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #004494;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .warning {
+            color: #cc0000;
+            margin-bottom: 10px;
+            display: none;
+            /* Hide by default */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1>Signup</h1>
+            <div class="warning" id="warning"></div> <!-- Alert placeholder -->
+            <form id="signupForm" action="/signup" method="post">
+                <div class="mb-3">
+                    <input type="text" name='type' value="user" hidden>
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Enter Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+            <a href="/">Already Have an account? Click here</a>
+        </div>
+        <div class="image-section">
+            <!-- Image is set in the CSS -->
+        </div>
+    </div>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form from submitting prematurely
+
+            var username = document.getElementById('username').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var warningElem = document.getElementById('warning');
+
+            // Validate inputs
+            if (username.length < 5) {
+                warningElem.textContent = 'Username must be at least 5 characters long.';
+                warningElem.style.display = 'block';
+                return;
+            } else if (!email.endsWith('@gmail.com')) {
+                warningElem.textContent = 'Email must end with @gmail.com';
+                warningElem.style.display = 'block';
+                return;
+            } else if (password.length < 6) {
+                warningElem.textContent = 'Password must be at least 6 characters long.';
+                warningElem.style.display = 'block';
+                return;
+            }
+
+            // Proceed with form submission if all validations pass
+            this.submit();
+        });
+    </script>
+</body>
+
+</html>

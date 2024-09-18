@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Allocated Books</title>
+    <style>
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+
+        .btn-return,
+        .btn-feedback {
+            color: #fff;
+            background-color: #009879;
+            border: none;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-return:hover,
+        .btn-feedback:hover {
+            background-color: #007f6b;
+        }
+
+        .rating-dropdown {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .feedback-input {
+            padding: 5px;
+            margin: 5px 0;
+            width: calc(100% - 10px);
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div id="app8">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/user_dashboard">User Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link active" href="/user_dashboard">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-item nav-link active" href="/requests_user">Requested Books</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/allocated_user">Allocated Books</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/stats_user">Stats</a>
+                    </li>
+
+                </ul>
+                <!-- <h4 class="ml-auto">Hi, {{ userId }}</h4> -->
+                <h4 class="ml-auto">{{ liveTime }}</h4>
+                <button class="btn btn-outline-danger ml-auto" id="logoutButton">Logout</button>
+            </div>
+        </nav>
+        <div class="container mt-5">
+            <h2>Allocated Books</h2>
+            <input type="text" v-model="searchTerm" placeholder="🔎 Search books" class="form-control mb-4">
+            <table class="styled-table">
+                <tr>
+                    <th>Id</th>
+                    <th>BookTitle</th>
+                    <th>Authors</th>
+                    <th>Date of Issue</th>
+                    <th>Return Date</th>
+                    <th>Actions</th>
+                    <th>
+                        Return
+                    </th>
+                </tr>
+                <tr v-for="book in filteredBooks" :key="book.book_id">
+                    <td>{{ book.book_id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.authors }}</td>
+                    <td>{{ book.date_of_issue }}</td>
+                    <td>{{ book.return_date }}</td>
+                    <td>
+
+                        <h5>
+                            Rate:
+                            <select v-model="book.rating" class="rating-dropdown">
+                                <option value="" disabled selected>Select a rating</option>
+                                <option value="1">⭐</option>
+                                <option value="2">⭐⭐</option>
+                                <option value="3">⭐⭐⭐</option>
+                                <option value="4">⭐⭐⭐⭐</option>
+                                <option value="5">⭐⭐⭐⭐⭐</option>
+                            </select>
+                        </h5>
+                        <input type="text" v-model="book.feedback" placeholder="Enter feedback" class="feedback-input">
+                        <button class="btn-feedback"
+                            @click="rateAndFeedbackBook(book.book_id, book.rating, book.feedback)">Submit
+                            Feedback</button>
+                    </td>
+                    <td>
+                        <button @click="Returnbook(book.book_id)"
+                            style="background-color: #dc3545; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">
+                            Return Book
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <div>
+                    <img src="static/alloc2.png" style="width: 55%; height: auto;">
+                </div>
+                <div>
+                    <img src="static/alloc1.png" style="width: 55%; height: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="static\js\allocated_user.js">
+        
+    </script>
+</body>
+
+</html>

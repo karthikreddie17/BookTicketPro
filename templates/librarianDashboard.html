@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Librarian Dashboard</title>
+    <style>
+        body {
+            padding-top: 56px;
+          
+        }
+
+        .navbar {
+            background-color: #0056b3;
+           
+        }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #fff !important;
+         
+        }
+
+        .navbar-brand:hover,
+        .navbar-nav .nav-link:hover {
+            color: #ffd700 !important;
+           
+        }
+
+        .search-bar {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding-left: 2.375rem;
+        
+        }
+
+        .search-bar i {
+            position: absolute;
+            top: 50%;
+            left: 0.75rem;
+            transform: translateY(-50%);
+            color: gray;
+        }
+
+        .navbar-collapse {
+            justify-content: space-between;
+        }
+
+        .btn-outline-danger {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .book-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+            height: 300px;
+
+            border-radius: 10px;
+            overflow: hidden;
+
+        }
+
+        .book-card:hover {
+            transform: scale(1.03);
+      
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+         
+        }
+
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: scale(1.07);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-card .card-img {
+            height: 100%;
+   
+            background-size: cover;
+            background-position: center;
+         
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-img-overlay {
+            color: rgb(255, 255, 255);
+            
+            width: 100%;
+           
+            height: 100%;
+          
+            padding-top: 45px;
+            padding-left: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid" id="app1">
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="/librarian_dashboard">Librarian Dashboard</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/librarian_dashboard">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/requests">Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/allocated">Allocated Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/stats">Stats</a>
+                        </li>
+
+                    </ul>
+                    <button @click="triggerExport" class="btn btn-primary">Export Books CSV</button>
+                    <p v-if="isProcessing">Processing... Please wait.</p>
+                    <button class="btn btn-outline-danger" type="button" id="logoutButton">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mt-3">
+            <br>
+            <h2>Librarian Dashboard</h2>
+            <input type="text" v-model="searchTerm" placeholder="Search sections or books" class="form-control mb-4">
+            <div class="d-flex justify-content-center mt-3">
+                <a href="/add_section" class="btn btn-primary mt-3">Add Section</a>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-12 mb-4" v-for="section in filteredSections" :key="section.id">
+                    <div class="card">
+                        <div class="card-header" @click="navigateToSection(section.id)">
+                            {{ section.name }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ section.description }}</p>
+                            <div class="row">
+                                <div class="col-md-3 mb-3" v-for="book in section.books" :key="book.id"
+                                    @click="navigateToBook(section.id, book.id)">
+                                    <div class="card book-card">
+                                        <div class="card-img" :style="{ backgroundImage: 'url(/static/book_img.png)' }">
+                                            <div class="card-img-overlay">
+                                                <h3 class="card-title">{{ book.title }}</h3>
+                                                <p class="card-text">{{ book.authors }}</p>
+                                                <p class="card-text">Rating: {{ book.rating }}
+                                                </p>
+                                                <button class="btn btn-danger"
+                                                    @click.stop="todelBook(section.id,book.id)">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="btn btn-primary" @click="toaddBook(section.id)"
+                                        style="text-align: center;">Add Book</button>
+                                </div>
+                                <button class="btn btn-danger" @click="todelSection(section.id)">Delete Section</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="static\js\librarianDashboard.js">
+            
+        </script>
+</body>
+
+</html>

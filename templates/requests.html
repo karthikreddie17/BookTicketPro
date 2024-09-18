@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Requests</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+        body {
+            padding-top: 56px;
+    
+        }
+
+        .navbar {
+            background-color: #0056b3;
+      
+        }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #fff !important;
+      
+        }
+
+        .navbar-brand:hover,
+        .navbar-nav .nav-link:hover {
+            color: #ffd700 !important;
+         
+        }
+
+        .search-bar {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding-left: 2.375rem;
+      
+        }
+
+        .search-bar i {
+            position: absolute;
+            top: 50%;
+            left: 0.75rem;
+            transform: translateY(-50%);
+            color: gray;
+        }
+
+        .navbar-collapse {
+            justify-content: space-between;
+        }
+
+        .btn-outline-danger {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+      
+            margin-top: 20px;
+    
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+    
+        }
+
+        th {
+            background-color: #5378cd;
+
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+          
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        
+        }
+
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-grant {
+            background-color: #12872e;
+    
+            color: white;
+        }
+
+        .btn-grant:hover {
+            background-color: #218838;
+
+        }
+
+        .btn-reject {
+            background-color: #c51527;
+       
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background-color: #c82333;
+      
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-grant {
+            margin-right: 7px;
+        
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid" id="app6">
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="/librarian_dashboard">Librarian Dashboard</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/librarian_dashboard">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/requests">Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/allocated">Allocated Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/stats">Stats</a>
+                        </li>
+
+                    </ul>
+                    <!-- <button @click="triggerExport" class="btn btn-primary">Export Books CSV</button>
+                        <p v-if="isProcessing">Processing... Please wait.</p> -->
+                    <button class="btn btn-outline-danger" type="button" id="logoutButton">Logout</button>
+                </div>
+            </div>
+        </nav>
+        <div class="container mt-5 pt-3" style="padding-top: 40px;">
+            <h1>Book Requests</h1>
+            <input type="text" v-model="searchTerm" placeholder="Search books" class="form-control mb-4">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book ID</th>
+                        <th>User ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="book in filteredBooks" :key="book.book_id">
+                        <td>{{ book.book_id }}</td>
+                        <td>{{ book.user_id }}</td>
+                        <td>
+                            <button class="btn-grant" @click="grantBook(book.book_id,book.user_id)">Grant</button>
+                            <button class="btn-reject" @click="rejectBook(book.book_id, book.user_id)">Reject</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <div>
+                    <img src="static/reqbook2.png" style="width: 65%; height: auto;">
+                </div>
+                <div>
+                    <img src="static/reqbook1.png" style="width: 55%; height: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    searchTerm: '',
+                    books: []
+                };
+            },
+            computed: {
+                filteredBooks() {
+                    if (!this.searchTerm) return this.books;
+
+                    return this.books.filter(book => {
+                        return (
+                            book.user_id.toLowerCase().includes(this.searchTerm.toLowerCase())
+                        );
+                    });
+                }
+            },
+            mounted() {
+                this.fetchRequests();
+                this.setupLogoutListener();
+            },
+            methods: {
+                setupLogoutListener() {
+                    document.getElementById('logoutButton').addEventListener('click', () => {
+                        localStorage.removeItem('token');
+                        window.location.href = '/logout';
+                    });
+                },
+
+                fetchRequests() {
+                    const token = localStorage.getItem('token');
+                    const headers = { 'Authorization': `Bearer ${token}` };
+                    axios.get('api/requests', { headers })
+
+                        .then(response => {
+                            this.books = response.data; // axios automatically parses the JSON, so you directly access `response.data`
+                        })
+                        .catch(error => console.error('Error fetching book requests:', error));
+                },
+
+                grantBook(bookId, userId) {
+                    const token = localStorage.getItem('token');
+                    const headers = { 'Authorization': `Bearer ${token}` };
+                    axios.post(`/api/grant_book`, { user_id: userId, book_id: bookId }, { headers })
+
+                        .then(response => {
+                            alert(response.data.message); // Display the response message
+                            // Optionally refresh the list or update UI
+                            this.fetchRequests();
+                        })
+                        .catch(error => {
+                            console.error('Error granting the book:', error);
+                            alert('Failed to grant the book. Please try again.');
+                        });
+                },
+                rejectBook(bookId, userId) {
+                    axios.post(`/api/reject_book`, {
+                        user_id: userId,
+                        book_id: bookId
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    })
+                        .then(response => {
+                            alert(response.data.message); // Display the response message
+                            // Optionally refresh the list or update UI
+                            this.fetchRequests(); // Refresh the requests to reflect the change
+                        })
+                        .catch(error => {
+                            console.error('Error rejecting the book:', error);
+                            alert('Failed to reject the book. Please try again.');
+                        });
+                }
+            }
+        }).mount('#app6');
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Add Section Form</title>
+    <style>
+        body {
+            padding-top: 56px;
+     
+        }
+    
+        .navbar {
+            background-color: #0056b3;
+        
+        }
+    
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #fff !important;
+         
+        }
+    
+        .navbar-brand:hover,
+        .navbar-nav .nav-link:hover {
+            color: #ffd700 !important;
+       
+        }
+    
+        .search-bar {
+            position: relative;
+            width: 100%;
+        }
+    
+        .search-bar input {
+            width: 100%;
+            padding-left: 2.375rem;
+      
+        }
+    
+        .search-bar i {
+            position: absolute;
+            top: 50%;
+            left: 0.75rem;
+            transform: translateY(-50%);
+            color: gray;
+        }
+    
+        .navbar-collapse {
+            justify-content: space-between;
+        }
+    
+        .btn-outline-danger {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container-fluid" id="app2">
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="/librarian_dashboard">Librarian Dashboard</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/librarian_dashboard">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/requests">Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/allocated">Allocated Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/stats">Stats</a>
+                        </li>
+    
+                    </ul>
+                    <!-- <button @click="triggerExport" class="btn btn-primary">Export Books CSV</button>
+                        <p v-if="isProcessing">Processing... Please wait.</p> -->
+                    <button class="btn btn-outline-danger" type="button" id="logoutButton">Logout</button>
+                </div>
+            </div>
+        </nav>
+        <div class="container mt-5 pt-3" style="padding-top: 40px;">
+        <div id="form" >
+            <div id="add-form">
+                <h2 class="form_label">{{ sectionId ? 'Update Section' : 'Add New Section' }}</h2>
+                <!-- <h2 class="form_label" >{{ flag == 0? 'Add New Section' : 'Update Section' }} </h2> -->
+                <form id="addSectionForm" @submit.prevent="addOrUpdateSection">
+                    <label for="section_name">Section Name</label>
+                    <input type="text" id="section_name" v-model="newSection.name" class="form-control"
+                        placeholder="Section Name.." required>
+
+                    <label for="description">Description</label>
+                    <textarea id="description" v-model="newSection.description" class="form-control"
+                        placeholder="Description.." rows="4" required></textarea>
+                    <input type="submit" class="btn btn-primary mt-3" value="Submit">
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+<script src="static\js\add_section_form.js">
+    
+</script>
+
+
+</html>

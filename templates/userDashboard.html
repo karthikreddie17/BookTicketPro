@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>User Dashboard</title>
+    <style>
+        .background-image {
+            background-image: url('static/back1.jpg');
+            width: 100%;
+            background-size: auto;
+            background-position: center;
+            background-repeat: repeat;
+    
+        }
+
+        .horizontal-list {
+            display: flex;
+            overflow-x: auto;
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+        }
+
+        .horizontal-list li {
+            flex: none;
+            margin-right: 10px;
+        }
+
+
+
+        .card:hover {
+            transform: scale(1.07);
+
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+        }
+
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+            background-image: linear-gradient(to bottom, #f8f0e3 0%, #dbd3c3 100%);
+            color: #5a4a42;
+        }
+
+        .card-header {
+            font-size: 1.2em;
+            background-color: #cfc4b2;
+            color: #3c332c;
+        }
+
+        .card-body {
+            padding: 15px;
+            color: #333;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+        }
+
+        .card-text {
+            font-size: 1.25em;
+        }
+
+        .btn {
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-image">
+        <div id="app5">
+            <!-- Navbar -->
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/user_dashboard">User Dashboard</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link active" href="/user_dashboard">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-item nav-link active" href="/requests_user">Requested Books</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/allocated_user">Allocated Books</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/stats_user">Stats</a>
+                        </li>
+
+                    </ul>
+                    <!-- <h4 class="ml-auto">Hi, {{ userId }}</h4> -->
+                    <h4 class="ml-auto">{{ liveTime }}</h4>
+                    <button class="btn btn-outline-danger ml-auto" id="logoutButton">Logout</button>
+                </div>
+            </nav>
+            <!-- Content -->
+
+            <div class="container mt-5">
+                <br>
+                <input type="text" v-model="searchTerm" placeholder="🔍 Search sections or books"
+                    class="form-control mb-4">
+                <div v-for="section in filteredSections" :key="section.id" class="mb-4">
+                    <div class="card">
+
+                        <div class="card-header">
+                            <h4><b>{{ section.name }}</b></h4>
+                        </div>
+                        <div class="card-body">
+                            <p>{{ section.description }}</p>
+                            <div class="row">
+
+                                <div class="col-md-4" v-for="book in section.books" :key="book.id">
+                                    <!-- <div v-if="!book.requested && !book.allocated"> -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>{{ book.title }}</b></h5>
+                                            <p class="card-text">{{ book.authors }}</p>
+                                            <p class="card-text"><small class="text-muted">Rating: {{ book.rating
+                                                    }}</small></p>
+                                            <button v-if="book.status === 'request'" @click="requestBook(book)"
+                                                class="btn btn-primary">Request</button>
+                                            <button v-else-if="book.status === 'requested'" class="btn btn-warning"
+                                                disabled>Requested</button>
+                                            <button v-else-if="book.status === 'allocated'" class="btn btn-success"
+                                                disabled>Allocated</button>
+                                            <button v-else-if="book.status === 'returned'" class="btn btn-info"
+                                                disabled>Returned</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
+    <script src="static\js\user.js">
+
+    </script>
+</body>
+
+</html>
